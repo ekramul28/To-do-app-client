@@ -1,25 +1,17 @@
 import Footer from "./components/share/Footer";
 import Navbar from "./components/share/Header";
-import HeroSection from "./pages/Banner/Banner";
-import FAQSection from "./pages/FAQSection/FAQSection";
-import Features from "./pages/Features/Features";
-import HowItWorks from "./pages/HowItWorks/HowItWorks";
-import Testimonials from "./pages/Testimonials/Testimonials";
+import { Outlet } from "react-router-dom";
 
-function App() {
+function MainLayout() {
   return (
     <>
       <Navbar />
-      <div className="mt-16">
-        <HeroSection />
-        <Features />
-        <HowItWorks />
-        <Testimonials />
-        <FAQSection />
-        <Footer />
-      </div>
+      <main className="mt-16">
+        <Outlet />
+      </main>
+      <Footer />
     </>
   );
 }
 
-export default App;
+export default MainLayout;

@@ -1,20 +1,27 @@
-import App from "@/App";
+import { createBrowserRouter } from "react-router-dom";
+import MainLayout from "@/App";
 import About from "@/pages/About/About";
 import Contact from "@/pages/Contact/Contact";
-import { createBrowserRouter } from "react-router-dom";
+import Home from "@/pages/Home/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/contact",
-    element: <Contact />,
+    element: <MainLayout />, // Main layout wrapping everything
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+    ],
   },
 ]);
 
