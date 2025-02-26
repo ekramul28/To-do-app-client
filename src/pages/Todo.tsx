@@ -5,7 +5,7 @@ const Todo = () => {
   return (
     <Container>
       <h1 className=" text-center text-3xl font-semibold">my todo</h1>
-      {/* <TodoContainer></TodoContainer> */}
+      <TodoContainer></TodoContainer>
     </Container>
   );
 };

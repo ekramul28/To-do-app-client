@@ -5,11 +5,13 @@ import Contact from "@/pages/Contact/Contact";
 import Home from "@/pages/Home/Home";
 import Login from "@/pages/Login/Login";
 import Register from "@/pages/Register/Register";
+import DashboardLayout from "@/pages/Dashboard/DashboardLayout/DashboardLayout";
+import Todo from "@/pages/Todo";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />, // Main layout wrapping everything
+    element: <MainLayout />,
     children: [
       {
         path: "/",
@@ -22,6 +24,16 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <Contact />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "todo",
+        element: <Todo />,
       },
     ],
   },

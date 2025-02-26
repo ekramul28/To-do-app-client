@@ -11,9 +11,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { FormEvent, useState } from "react";
-import { useAppDispatch } from "@/redux/hooks";
-import { addTodo } from "@/redux/features/todoSlice";
-import { useAddTodoMutation } from "@/redux/api/api";
 import {
   Select,
   SelectContent,
@@ -23,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useCreateTodoMutation } from "@/redux/features/todo/todoApi";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState("");
@@ -31,7 +29,7 @@ const AddTodoModal = () => {
 
   // const dispatch = useAppDispatch();
   const [addTodo, { data, isError, isSuccess, isLoading }] =
-    useAddTodoMutation();
+    useCreateTodoMutation();
   console.log(data, isError, isSuccess, isLoading);
 
   const onSubmit = (e: FormEvent) => {
@@ -73,9 +71,10 @@ const AddTodoModal = () => {
                 Task
               </Label>
               <Input
-                onBlur={(e) => setTask(e.target.value)}
+                onChange={(e) => setTask(e.target.value)} // use onChange instead of onBlur
                 id="task"
                 className="col-span-3"
+                value={task}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -83,14 +82,18 @@ const AddTodoModal = () => {
                 Description
               </Label>
               <Input
-                onBlur={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)} // use onChange instead of onBlur
                 id="description"
                 className="col-span-3"
+                value={description}
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4 ">
-              <Label className="text-right">Select</Label>
-              <Select onValueChange={(value) => setPriority(value)}>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Select Priority</Label>
+              <Select
+                onValueChange={(value) => setPriority(value)}
+                value={priority}
+              >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select Your Priority" />
                 </SelectTrigger>
@@ -98,17 +101,30 @@ const AddTodoModal = () => {
                   <SelectGroup>
                     <SelectLabel>Priority</SelectLabel>
                     <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">medium</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="low">Low</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <div className="flex justify-end">
-            <DialogClose asChild>
-              <Button type="submit">Save changes</Button>
-            </DialogClose>
+
+          <div className="flex justify-end space-x-4">
+            {isLoading ? (
+              <Button disabled>Saving...</Button>
+            ) : (
+              <DialogClose asChild>
+                <Button type="submit">Save changes</Button>
+              </DialogClose>
+            )}
+            {isError && (
+              <p className="text-red-500 text-sm">
+                Something went wrong, please try again.
+              </p>
+            )}
+            {isSuccess && (
+              <p className="text-green-500 text-sm">Task added successfully!</p>
+            )}
           </div>
         </form>
       </DialogContent>
