@@ -1,5 +1,6 @@
 import Footer from "./components/share/Footer";
 import Navbar from "./components/share/Header";
+import Testimonials from "./pages/Testimonials/Testimonials";
 import Todo from "./pages/Todo";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <>
       <Navbar />
       <Todo></Todo>
+      <Testimonials />
       <Footer />
     </>
   );
