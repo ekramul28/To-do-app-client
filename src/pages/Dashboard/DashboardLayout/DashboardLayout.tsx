@@ -27,9 +27,13 @@ const DashboardLayout = () => {
             </Link>
           ))}
         </nav>
-        <button className="mt-auto flex items-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
-          <LogOut size={18} /> Logout
-        </button>
+        <div className="flex flex-col h-full">
+          {/* Other content here */}
+
+          <button className="mt-auto flex items-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
+            <LogOut size={18} /> Logout
+          </button>
+        </div>
       </aside>
 
       {/* Mobile Sidebar */}
@@ -52,9 +56,13 @@ const DashboardLayout = () => {
               </Link>
             ))}
           </nav>
-          <button className="mt-6 flex items-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
-            <LogOut size={18} /> Logout
-          </button>
+          <div className="flex flex-col h-full">
+            {/* Other content here */}
+
+            <button className="mt-auto flex items-center gap-2 py-2 px-4 rounded bg-red-600 hover:bg-red-700 transition">
+              <LogOut size={18} /> Logout
+            </button>
+          </div>
         </SheetContent>
       </Sheet>
 
@@ -62,7 +70,9 @@ const DashboardLayout = () => {
       <div className="flex-1 flex flex-col">
         {/* Top Navbar */}
         <header className="w-full bg-white shadow-md p-4 flex justify-between items-center">
-          <h1 className="text-lg font-semibold">Welcome to Dashboard</h1>
+          <h1 className="text-lg font-semibold hidden lg:block">
+            Welcome to Dashboard
+          </h1>
           <div className="flex items-center gap-4">
             <User size={24} className="text-gray-600" />
             <Link
