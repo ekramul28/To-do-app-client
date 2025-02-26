@@ -2,7 +2,7 @@ import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type RegisterFormInputs = {
   name: string;
@@ -86,6 +86,16 @@ const Register = () => {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
+
+        <p className="text-center text-gray-600">
+          you have an account?{" "}
+          <Link
+            to="/login"
+            className="text-indigo-600 hover:underline font-semibold"
+          >
+            login here
+          </Link>
+        </p>
       </div>
     </div>
   );

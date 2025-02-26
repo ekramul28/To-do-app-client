@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom"; // If using React Router
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -11,6 +13,9 @@ const navItems = [
 ];
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
+
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div className="container mx-auto flex items-center justify-between p-4">
@@ -20,7 +25,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6 items-center">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -30,6 +35,22 @@ const Navbar = () => {
               {item.label}
             </Link>
           ))}
+
+          {/* User Authentication */}
+          {user ? (
+            <Button variant="outline" onClick={() => dispatch(logout())}>
+              Logout
+            </Button>
+          ) : (
+            <div className="flex gap-4">
+              <Button variant="outline" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/register">Register</Link>
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -46,6 +67,22 @@ const Navbar = () => {
                   {item.label}
                 </Link>
               ))}
+
+              {/* User Authentication (Mobile View) */}
+              {user ? (
+                <Button variant="outline" onClick={() => dispatch(logout())}>
+                  Logout
+                </Button>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Button variant="outline" asChild>
+                    <Link to="/login">Login</Link>
+                  </Button>
+                  <Button asChild>
+                    <Link to="/register">Register</Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </SheetContent>
         </Sheet>

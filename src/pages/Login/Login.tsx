@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { setUser } from "@/redux/features/auth/authSlice";
 
@@ -63,12 +63,22 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <p className="text-center text-gray-600">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-indigo-600 hover:underline font-semibold"
+          >
+            Register here
+          </Link>
+        </p>
       </div>
     </div>
   );
