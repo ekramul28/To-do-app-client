@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useVerifyEmailMutation } from "@/redux/features/auth/authApi";
+import { verifyToken } from "@/lib/verifyToken";
+import { setUser, TUser } from "@/redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const MailCodeForm = () => {
   const [code, setCode] = useState("");
   const [email, setEmail] = useState<string | null>("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,9 +27,17 @@ const MailCodeForm = () => {
     e.preventDefault();
     try {
       const result = await verifyEmail({ email, code }).unwrap();
-      console.log(result);
+      console.log("mail", result);
+
+      if (result?.success) {
+        const user = verifyToken(result.data.accessToken) as TUser;
+        dispatch(setUser({ user: user, token: result.data.accessToken }));
+        navigate("/dashboard");
+        toast.success("Login Successfully");
+      }
     } catch (error) {
-      alert("Verification failed. Please try again.");
+      navigate("/");
+      toast.error("Verification failed. Please try again.");
     }
   };
 

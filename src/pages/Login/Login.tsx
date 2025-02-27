@@ -1,10 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { setUser, TUser } from "@/redux/features/auth/authSlice";
-import { verifyToken } from "@/lib/verifyToken";
-import { toast } from "sonner";
 
 type LoginFormInputs = {
   email: string;
@@ -12,7 +8,6 @@ type LoginFormInputs = {
 };
 
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
     register,
@@ -25,12 +20,6 @@ const Login = () => {
     try {
       const result = await login(data).unwrap();
 
-      console.log(result);
-      // if (result?.success) {
-      //   const user = verifyToken(result.data.accessToken) as TUser;
-      //   dispatch(setUser({ user: user, token: result.data.accessToken }));
-      //   toast("Login Successfully");
-      // }
       const redirect = result?.data?.redirectUrL;
       navigate(redirect);
     } catch (error) {
