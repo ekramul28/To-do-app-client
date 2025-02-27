@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { Menu, User, LogOut } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";

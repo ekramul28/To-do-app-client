@@ -24,12 +24,15 @@ const Login = () => {
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       const result = await login(data).unwrap();
-      if (result?.success) {
-        const user = verifyToken(result.data.accessToken) as TUser;
-        dispatch(setUser({ user: user, token: result.data.accessToken }));
-        navigate("/dashboard");
-        toast("Login Successfully");
-      }
+
+      console.log(result);
+      // if (result?.success) {
+      //   const user = verifyToken(result.data.accessToken) as TUser;
+      //   dispatch(setUser({ user: user, token: result.data.accessToken }));
+      //   toast("Login Successfully");
+      // }
+      const redirect = result?.data?.redirectUrL;
+      navigate(redirect);
     } catch (error) {
       console.error("Login failed", error);
     }

@@ -7,6 +7,7 @@ import Login from "@/pages/Login/Login";
 import Register from "@/pages/Register/Register";
 import DashboardLayout from "@/pages/Dashboard/DashboardLayout/DashboardLayout";
 import Todo from "@/pages/Todo";
+import MailCodeForm from "@/pages/MailCodeFrom/MailCodeFrom";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/mail",
+    element: <MailCodeForm />,
   },
   {
     path: "/register",
