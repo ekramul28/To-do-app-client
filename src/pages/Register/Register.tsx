@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { setUser, TUser } from "@/redux/features/auth/authSlice";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useRegisterUserMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
-import { verifyToken } from "@/lib/verifyToken";
 
 type RegisterFormInputs = {
   name: string;
   email: string;
   password: string;
-  profileImage?: FileList;
+  picture?: FileList;
 };
 
 const Register = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
     register,
@@ -38,17 +34,15 @@ const Register = () => {
       })
     );
 
-    if (data.profileImage && data.profileImage[0]) {
-      formData.append("file", data.profileImage[0]);
+    if (data.picture && data.picture[0]) {
+      formData.append("file", data.picture[0]);
     }
 
     try {
       const result = await registerUser(formData).unwrap();
       if (result?.success) {
-        const user = verifyToken(result.data.accessToken) as TUser;
-        dispatch(setUser({ user: user, token: result.data.accessToken }));
-        navigate("/dashboard");
-        toast("Login Successfully");
+        navigate("/login");
+        toast("register Successfully now login");
       }
     } catch (error) {
       console.error("Registration failed", error);
@@ -123,7 +117,7 @@ const Register = () => {
             <input
               type="file"
               accept="image/*"
-              {...register("profileImage")}
+              {...register("picture")}
               className="w-full px-4 py-2 border rounded-lg"
               onChange={handleImageChange}
             />
