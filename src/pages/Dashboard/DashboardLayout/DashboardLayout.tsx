@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Outlet, Link } from "react-router-dom";
 import { Menu, User, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { verifyToken } from "@/lib/verifyToken";
+import { setUser, TUser } from "@/redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const SidebarLinks = [
   { path: "/dashboard", label: "Dashboard" },
@@ -12,16 +16,15 @@ const SidebarLinks = [
 ];
 
 const DashboardLayout = () => {
-  const [token, setToken] = useState<string | null>(null);
-  console.log(token);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    // Get token from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 
     if (token) {
-      setToken(token);
-      console.log("Received Token:", token);
+      const user = verifyToken(token) as TUser;
+      dispatch(setUser({ user: user, token }));
     }
   }, []);
   return (
