@@ -21,39 +21,39 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useCreateTodoMutation } from "@/redux/features/todo/todoApi";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 
 const AddTodoModal = () => {
+  const user = useSelector(selectCurrentUser);
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  // const dispatch = useAppDispatch();
-  const [addTodo, { data, isError, isSuccess, isLoading }] =
-    useCreateTodoMutation();
-  console.log(data, isError, isSuccess, isLoading);
-
+  const [addTodo, { isError, isSuccess, isLoading }] = useCreateTodoMutation();
+  console.log(user);
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const randomString = Math.random().toString(36).substring(2, 7);
-
     const taskDetails = {
-      id: randomString,
+      userEmail: user?.email,
       isCompleted: false,
       title: task,
       description,
       priority,
+      startDate,
+      endDate,
     };
 
-    console.log("inside todo", taskDetails);
-    // dispatch(addTodo(taskDetails));
     addTodo(taskDetails);
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-primary-gradient text-xl font-semibold">
+        <Button className="bg-black text-white text-xl font-semibold">
           Add todo
         </Button>
       </DialogTrigger>
@@ -71,7 +71,7 @@ const AddTodoModal = () => {
                 Task
               </Label>
               <Input
-                onChange={(e) => setTask(e.target.value)} // use onChange instead of onBlur
+                onChange={(e) => setTask(e.target.value)}
                 id="task"
                 className="col-span-3"
                 value={task}
@@ -82,7 +82,7 @@ const AddTodoModal = () => {
                 Description
               </Label>
               <Input
-                onChange={(e) => setDescription(e.target.value)} // use onChange instead of onBlur
+                onChange={(e) => setDescription(e.target.value)}
                 id="description"
                 className="col-span-3"
                 value={description}
@@ -100,12 +100,40 @@ const AddTodoModal = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Priority</SelectLabel>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Low">Low</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Start Date */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="startDate" className="text-right">
+                Start Date
+              </Label>
+              <Input
+                type="date"
+                onChange={(e) => setStartDate(e.target.value)}
+                id="startDate"
+                className="col-span-3"
+                value={startDate}
+              />
+            </div>
+
+            {/* End Date */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="endDate" className="text-right">
+                End Date
+              </Label>
+              <Input
+                type="date"
+                onChange={(e) => setEndDate(e.target.value)}
+                id="endDate"
+                className="col-span-3"
+                value={endDate}
+              />
             </div>
           </div>
 

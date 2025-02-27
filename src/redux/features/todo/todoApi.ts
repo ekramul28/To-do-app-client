@@ -4,8 +4,8 @@ const todoApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get All Todos
     getAllTodos: builder.query({
-      query: () => ({
-        url: "/todos",
+      query: (email) => ({
+        url: `/todos/${email}`,
         method: "GET",
       }),
       providesTags: ["Todos"],
