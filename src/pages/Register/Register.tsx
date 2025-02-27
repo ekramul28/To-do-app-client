@@ -1,13 +1,18 @@
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
-import { setUser } from "@/redux/features/auth/authSlice";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { setUser, TUser } from "@/redux/features/auth/authSlice";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useRegisterUserMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { verifyToken } from "@/lib/verifyToken";
 
 type RegisterFormInputs = {
   name: string;
   email: string;
   password: string;
+  profileImage?: FileList;
 };
 
 const Register = () => {
@@ -18,16 +23,47 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormInputs>();
-  const [registerUser, { isLoading, error }] = useRegisterMutation();
+
+  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
+  const [preview, setPreview] = useState<string | null>(null);
 
   const onSubmit = async (data: RegisterFormInputs) => {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      JSON.stringify({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+    );
+
+    if (data.profileImage && data.profileImage[0]) {
+      formData.append("file", data.profileImage[0]);
+    }
+
     try {
-      const response = await registerUser(data).unwrap(); // Handle success properly
-      dispatch(setUser(response)); // Store user & token in Redux
-      localStorage.setItem("token", response.token); // Save token
-      navigate("/dashboard"); // Redirect to dashboard
-    } catch (err) {
-      console.error("Registration failed", err);
+      const result = await registerUser(formData).unwrap();
+      if (result?.success) {
+        const user = verifyToken(result.data.accessToken) as TUser;
+        dispatch(setUser({ user: user, token: result.data.accessToken }));
+        navigate("/dashboard");
+        toast("Login Successfully");
+      }
+    } catch (error) {
+      console.error("Registration failed", error);
+    }
+  };
+
+  // Handle image preview
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -41,7 +77,11 @@ const Register = () => {
           <p className="text-red-500 text-center">Registration failed</p>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+          encType="multipart/form-data"
+        >
           <div>
             <label className="block text-gray-700">Name</label>
             <input
@@ -78,6 +118,24 @@ const Register = () => {
             )}
           </div>
 
+          <div>
+            <label className="block text-gray-700">Profile Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              {...register("profileImage")}
+              className="w-full px-4 py-2 border rounded-lg"
+              onChange={handleImageChange}
+            />
+            {preview && (
+              <img
+                src={preview}
+                alt="Preview"
+                className="mt-2 h-20 w-20 rounded-full object-cover"
+              />
+            )}
+          </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
@@ -88,12 +146,12 @@ const Register = () => {
         </form>
 
         <p className="text-center text-gray-600">
-          you have an account?{" "}
+          Already have an account?{" "}
           <Link
             to="/login"
             className="text-indigo-600 hover:underline font-semibold"
           >
-            login here
+            Login here
           </Link>
         </p>
       </div>

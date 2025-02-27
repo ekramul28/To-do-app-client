@@ -2,6 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Menu, User, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 const SidebarLinks = [
   { path: "/dashboard", label: "Dashboard" },
@@ -11,11 +12,25 @@ const SidebarLinks = [
 ];
 
 const DashboardLayout = () => {
+  const [token, setToken] = useState<string | null>(null);
+  console.log(token);
+  useEffect(() => {
+    // Get token from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+
+    if (token) {
+      setToken(token);
+      console.log("Received Token:", token);
+    }
+  }, []);
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-gray-900 text-white p-4 space-y-4">
-        <h2 className="text-xl font-bold">Dashboard</h2>
+        <Link to="/">
+          <h2 className="text-xl font-bold">MY TODO APP</h2>
+        </Link>
         <nav className="flex flex-col space-y-2">
           {SidebarLinks.map((link) => (
             <Link

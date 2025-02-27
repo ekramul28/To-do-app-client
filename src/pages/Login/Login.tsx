@@ -2,7 +2,9 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { setUser } from "@/redux/features/auth/authSlice";
+import { setUser, TUser } from "@/redux/features/auth/authSlice";
+import { verifyToken } from "@/lib/verifyToken";
+import { toast } from "sonner";
 
 type LoginFormInputs = {
   email: string;
@@ -21,13 +23,20 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      const response = await login(data).unwrap();
-      dispatch(setUser(response));
-      localStorage.setItem("token", response.token);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error("Login failed", err);
+      const result = await login(data).unwrap();
+      if (result?.success) {
+        const user = verifyToken(result.data.accessToken) as TUser;
+        dispatch(setUser({ user: user, token: result.data.accessToken }));
+        navigate("/dashboard");
+        toast("Login Successfully");
+      }
+    } catch (error) {
+      console.error("Login failed", error);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google"; // Redirect to backend Google login
   };
 
   return (
@@ -63,12 +72,21 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+            className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-700 transition"
             disabled={isLoading}
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="text-center my-4">
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full  bg-indigo-700  text-white py-2 rounded-lg  transition flex justify-center items-center gap-2"
+          >
+            Login with Google
+          </button>
+        </div>
 
         <p className="text-center text-gray-600">
           Don't have an account?{" "}
