@@ -33,7 +33,13 @@ const AddTodoModal = () => {
   const [endDate, setEndDate] = useState("");
 
   const [addTodo, { isError, isSuccess, isLoading }] = useCreateTodoMutation();
-  console.log(user);
+  console.log("add to do", user);
+  let email;
+  if (user.isGoogleAuth) {
+    email = user._doc.email;
+  } else {
+    email = user?.email;
+  }
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
