@@ -20,6 +20,8 @@ const navItems = [
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+
+  console.log("this is", user);
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div className="container mx-auto flex items-center justify-between p-4">

@@ -34,6 +34,7 @@ const DashboardLayout = () => {
 
     if (token) {
       const user = verifyToken(token) as TUser;
+      console.log("this is main user", user);
       dispatch(setUser({ user: user, token }));
     }
   }, []);

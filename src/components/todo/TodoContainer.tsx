@@ -15,7 +15,7 @@ const TodoContainer = () => {
 
   // Use the fetched data if available, otherwise default to an empty array
   const todos = data?.data || [];
-
+  console.log(todos);
   return (
     <div>
       <div className="flex justify-between mb-5">
