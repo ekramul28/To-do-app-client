@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { format } from "date-fns";
 
 type TTodoCardProps = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   startDate: Date;
@@ -28,7 +28,7 @@ const priorityColors = {
 };
 
 const TodoCard = ({
-  id,
+  _id,
   title,
   description,
   startDate,
@@ -38,27 +38,44 @@ const TodoCard = ({
 }: TTodoCardProps) => {
   const [updateTodo] = useUpdateTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
-
-  const toggleState = () => {
-    updateTodo({
-      id,
-      data: { status: status === "Completed" ? "Pending" : "Completed" },
-    });
+  console.log(_id);
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    updateTodo({ _id, data: { status: event.target.value } });
   };
 
   const handleDelete = () => {
-    deleteTodo(id);
+    deleteTodo(_id);
   };
 
   return (
     <div className="bg-white shadow-md rounded-lg p-5 border flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-        <span
-          className={`text-sm ${statusColors[status]} px-3 py-1 rounded-md border`}
-        >
-          {status}
-        </span>
+
+        {/* Show dropdown only if status is NOT "Completed" */}
+        {status === "Completed" ? (
+          <span
+            className={`text-sm ${statusColors[status]} px-3 py-1 rounded-md border`}
+          >
+            {status}
+          </span>
+        ) : (
+          <select
+            value={status}
+            onChange={handleStatusChange}
+            className={`text-sm ${statusColors[status]} px-3 py-1 rounded-md border bg-white`}
+          >
+            <option value="Pending" className="text-yellow-500">
+              Pending
+            </option>
+            <option value="inProgress" className="text-blue-500">
+              In Progress
+            </option>
+            <option value="Completed" className="text-green-500">
+              Completed
+            </option>
+          </select>
+        )}
       </div>
 
       <p className="text-gray-600">{description}</p>
@@ -72,20 +89,12 @@ const TodoCard = ({
         <span className={`text-sm ${priorityColors[priority]}`}>
           Priority: {priority}
         </span>
-        <div className="flex gap-3">
-          <Button
-            onClick={toggleState}
-            className="bg-green-500 text-white px-3 py-1"
-          >
-            {status === "Completed" ? "Reopen" : "Mark Done"}
-          </Button>
-          <Button
-            onClick={handleDelete}
-            className="bg-red-500 text-white px-3 py-1"
-          >
-            Delete
-          </Button>
-        </div>
+        <Button
+          onClick={handleDelete}
+          className="bg-red-500 text-white px-3 py-1"
+        >
+          Delete
+        </Button>
       </div>
     </div>
   );

@@ -23,11 +23,14 @@ const todoApi = baseApi.injectEndpoints({
 
     // Update a Todo (Complete/Pending)
     updateTodo: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/todos/${id}`,
-        method: "PATCH",
-        body: data,
-      }),
+      query: (data) => {
+        console.log("redux", data);
+        return {
+          url: `/todos/${data._id}`,
+          method: "PATCH",
+          body: data.data,
+        };
+      },
       invalidatesTags: ["Todos"],
     }),
 
